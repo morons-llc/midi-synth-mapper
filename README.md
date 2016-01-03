@@ -16,7 +16,7 @@ Use it:
 var RolandJuno106 = require('./lib').RolandJuno106;
 
 // sysex can be either a Uint8Array or a Buffer
-var patch = RolandJuno106.decode(sysex);
+var patch = RolandJuno106.decodeFullPatch(sysex);
 
 /*
     patch looks like this:
@@ -48,7 +48,12 @@ var patch = RolandJuno106.decode(sysex);
 patch.filter.polarity = 'negative';
 
 // re-encode it:
-var modifiedSysex = RolandJuno106.encode(patch);
+var modifiedSysex = RolandJuno106.encodeFullPatch(patch);
 
-// don't be a moron!
+// check of a param can be changed invidually
+RolandJuno106.paramChangeSupportedFor("filter.resonance"); // true
+RolandJuno106.paramChangeSupportedFor("filter.polarity"); // false
+
+// encode a param change sysex message
+var changeLFORateMessage = RolandJuno106.encodeParamChange("mod.lfo.rate", 1);
 ```
