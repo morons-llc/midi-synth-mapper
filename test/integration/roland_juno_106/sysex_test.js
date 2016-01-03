@@ -97,6 +97,18 @@ describe('RolandJuno106', function () {
     });
   });
 
+  describe('.paramChangeSupportedFor', function () {
+    it('returns true if a param can be individually set', function () {
+      let result = RolandJuno106.paramChangeSupportedFor("filter.resonance");
+      expect(result).to.be.true;
+    });
+
+    it('returns false if a param cannot be individually set', function () {
+      let result = RolandJuno106.paramChangeSupportedFor("filter.polarity");
+      expect(result).to.be.false;
+    });
+  });
+
   describe('single param change encoding', function () {
     it('encodes LFO rate', function () {
       let result = RolandJuno106.encodeParamChange("mod.lfo.rate", 1);

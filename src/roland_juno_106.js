@@ -187,6 +187,10 @@ function _paramCodeFor(paramPath) {
             constants.PARAM_CODES);
 }
 
+function paramChangeSupportedFor(paramPath) {
+  return !!_paramCodeFor(paramPath);
+}
+
 function encodeParamChange(paramPath, value, channel = 0) {
   let paramCode = _paramCodeFor(paramPath);
 
@@ -215,5 +219,6 @@ function encodeParamChange(paramPath, value, channel = 0) {
 export default {
   sysexDecode,
   sysexEncode,
-  encodeParamChange
+  encodeParamChange,
+  paramChangeSupportedFor
 };

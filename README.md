@@ -50,5 +50,10 @@ patch.filter.polarity = 'negative';
 // re-encode it:
 var modifiedSysex = RolandJuno106.encode(patch);
 
-// don't be a moron!
+// check of a param can be changed invidually
+RolandJuno106.paramChangeSupportedFor("filter.resonance"); // true
+RolandJuno106.paramChangeSupportedFor("filter.polarity"); // false
+
+// encode a param change sysex message
+var changeLFORateMessage = RolandJuno106.encodeParamChange("mod.lfo.rate", 1);
 ```
