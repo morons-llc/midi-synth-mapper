@@ -57,15 +57,21 @@ export default {
       throw "The wavelength is not set?";
     }
 
-    patch.osc.osc1.pulseWave = Boolean(sysex[21] & constants.PULSE_WAVEFORM_SET);
-    patch.osc.osc1.triangleWave = Boolean(sysex[21] & constants.TRIANGLE_WAVEFORM_SET);
+    patch.osc.osc1.pulseWave =
+      Boolean(sysex[21] & constants.PULSE_WAVEFORM_SET);
+    patch.osc.osc1.triangleWave =
+      Boolean(sysex[21] & constants.TRIANGLE_WAVEFORM_SET);
     patch.chorus.enabled = !Boolean(sysex[21] & constants.CHORUS_ON);
     patch.chorus.level = Boolean(sysex[21] & constants.CHORUS_LEVEL) ? 1 : 2;
 
-    patch.osc.osc1.pwmType = Boolean(sysex[22] & constants.DCO_PWM_TYPE) ? 'manual' : 'lfo';
-    // TODO vca env, vcf polarity, hpf position (0 - 3)
+    patch.osc.osc1.pwmType =
+      Boolean(sysex[22] & constants.DCO_PWM_TYPE) ? 'manual' : 'lfo';
+    patch.amp.modType =
+      Boolean(sysex[22] & constants.VCA_MOD_TYPE) ? 'gate' : 'env';
+    patch.filter.polarity =
+      Boolean(sysex[22] & constants.VCF_POLARITY) ? 'positive' : 'negative';
+    patch.filter.hpf = 3 - (sysex[22] & 3);
 
     return patch;
   }
 };
-
