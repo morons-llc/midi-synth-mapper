@@ -8,7 +8,33 @@ let constants = {
   CHORUS_LEVEL: 1 << 6,
   DCO_PWM_TYPE: 1 << 0,
   VCA_MOD_TYPE: 1 << 1,
-  VCF_POLARITY: 1 << 2
+  VCF_POLARITY: 1 << 2,
+
+  PARAM_CODES: { osc:
+                 { osc1:
+                   { lfo: 0x02,
+                     pwmLevel: 0x03,
+                     noise: 0x04,
+                     subOsc: 0x0F,
+                     waveLength: undefined,
+                     pulseWave: undefined,
+                     triangleWave: undefined,
+                     pwmType: undefined } },
+                 mod: { lfo: { rate: 0x00, delay: 0x01 } },
+                 filter:
+                 { frequency: 0x05,
+                   resonance: 0x06,
+                   envelopeAmount: 0x07,
+                   lfo: 0x08,
+                   keyboardTracking: 0x09,
+                   polarity: undefined,
+                   hpf: undefined },
+                 envelope: { attack: 0x0B,
+                             decay: 0x0C,
+                             sustain: 0x0D,
+                             release: 0x0E },
+                 amp: { level: 0x0A, modType: undefined },
+                 chorus: { disabled: undefined, level: undefined } }
 };
 
 // takes an instance of Buffer or Uint8Array
@@ -108,15 +134,15 @@ function sysexEncode(patch) {
   // ****************** byte 21
 
   switch (patch.osc.osc1.waveLength) {
-    case '4':
-      sysex[21] = constants.WAVE_LENGTH_4;
-      break;
-    case '8':
-      sysex[21] = constants.WAVE_LENGTH_8;
-      break;
-    case '16':
-      sysex[21] = constants.WAVE_LENGTH_16;
-      break;
+  case '4':
+    sysex[21] = constants.WAVE_LENGTH_4;
+    break;
+  case '8':
+    sysex[21] = constants.WAVE_LENGTH_8;
+    break;
+  case '16':
+    sysex[21] = constants.WAVE_LENGTH_16;
+    break;
   }
 
   if (patch.osc.osc1.pulseWave) {
@@ -124,7 +150,7 @@ function sysexEncode(patch) {
   }
 
   if (patch.osc.osc1.triangleWave) {
-   sysex[21] = sysex[21] | constants.TRIANGLE_WAVEFORM_SET;
+    sysex[21] = sysex[21] | constants.TRIANGLE_WAVEFORM_SET;
   }
 
   if (patch.chorus.disabled) {
@@ -154,7 +180,40 @@ function sysexEncode(patch) {
   return sysex;
 }
 
+function _paramCodeFor(paramPath) {
+  return paramPath
+    .split(".")
+    .reduce((memo, key) => memo[key],
+            constants.PARAM_CODES);
+}
+
+function encodeParamChange(paramPath, value, channel = 0) {
+  let paramCode = _paramCodeFor(paramPath);
+
+  if (value == null) {
+    throw new Error(`No value provided for ${paramPath}`);
+  }
+
+  if (paramCode == null) {
+    throw new Error(`No param code found for ${paramPath} with value ${value}`);
+  }
+
+  let sysex = new Uint8Array(7);
+
+  sysex[0] = 0xF0;
+  sysex[1] = 0x41; // Roland ID
+  sysex[2] = 0x32; // message type
+  sysex[3] = channel; // MIDI channel
+  sysex[4] = paramCode;
+  sysex[5] = value;
+
+  sysex[6] = 0xF7;
+
+  return sysex;
+}
+
 export default {
   sysexDecode,
-  sysexEncode
+  sysexEncode,
+  encodeParamChange
 };
