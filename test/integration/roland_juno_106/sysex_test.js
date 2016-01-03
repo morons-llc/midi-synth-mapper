@@ -1,12 +1,14 @@
 let fs = require('fs');
 import RolandJuno106 from '../../../src/roland_juno_106';
 
+function readSysexDumpFile(num) {
+  return fs.readFileSync(`./test/fixtures/roland_juno_106/patch_dump_${num}.syx`);
+}
+
 describe('RolandJuno106', function () {
   before(function () {
-    this.sysexOneBuffer =
-      fs.readFileSync('./test/fixtures/roland_juno_106/patch_dump_1.syx');
-    this.sysexTwoBuffer =
-      fs.readFileSync('./test/fixtures/roland_juno_106/patch_dump_2.syx');
+    this.sysexOneBuffer = readSysexDumpFile(1);
+    this.sysexTwoBuffer = readSysexDumpFile(2);
 
     this.sysexTwoData =
       { osc:
@@ -26,8 +28,8 @@ describe('RolandJuno106', function () {
           envelopeAmount: 127,
           lfo: 127,
           keyboardTracking: 0,
-          polarity: 'negative',
-          hpf: 1 },
+          polarity: 'positive',
+          hpf: 2 },
         envelope: { attack: 127, decay: 0, sustain: 0, release: 127 },
         amp: { level: 127, modType: 'gate' },
         chorus: { enabled: true, level: 1 } };
@@ -54,8 +56,8 @@ describe('RolandJuno106', function () {
               envelopeAmount: 17,
               lfo: 0,
               keyboardTracking: 29,
-              polarity: 'negative',
-              hpf: 1 },
+              polarity: 'positive',
+              hpf: 0 },
             envelope: { attack: 0, decay: 60, sustain: 0, release: 127 },
             amp: { level: 105, modType: 'env' },
             chorus: { enabled: true, level: 2 } };
@@ -64,7 +66,7 @@ describe('RolandJuno106', function () {
       expect(result).to.eql(expected);
     });
 
-    it('returns a representation of patch state, input 1', function () {
+    it('returns a representation of patch state, input 2', function () {
       let sysex = new Uint8Array(this.sysexTwoBuffer);
       let expected = this.sysexTwoData;
       let result = RolandJuno106.sysexDecode(sysex);

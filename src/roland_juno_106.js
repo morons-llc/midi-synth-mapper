@@ -72,9 +72,9 @@ function sysexDecode(sysex) {
   patch.amp.modType =
     Boolean(sysex[22] & constants.VCA_MOD_TYPE) ? 'gate' : 'env';
   patch.filter.polarity =
-    Boolean(sysex[22] & constants.VCF_POLARITY) ? 'positive' : 'negative';
+    Boolean(sysex[22] & constants.VCF_POLARITY) ? 'negative' : 'positive';
 
-  patch.filter.hpf = 3 - ((sysex[22] & 0b1100) >> 2);
+  patch.filter.hpf = 3 - ((sysex[22] >> 3) & 0b11);
 
   return patch;
 }
@@ -147,11 +147,11 @@ function sysexEncode(patch) {
     sysex[22] = sysex[22] | constants.VCA_MOD_TYPE;
   }
 
-  if (patch.filter.polarity === 'positive') {
+  if (patch.filter.polarity === 'negative') {
     sysex[22] = sysex[22] | constants.VCF_POLARITY;
   }
 
-  sysex[22] = sysex[22] | ((3 - patch.filter.hpf) << 2);
+  sysex[22] = sysex[22] | ((3 - patch.filter.hpf) << 3);
 
   return sysex;
 }
