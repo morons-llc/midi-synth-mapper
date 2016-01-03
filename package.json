@@ -1,6 +1,8 @@
 {
   "name": "midi-synth-mapper",
+  "repository": "https://github.com/morons-llc/midi-synth-mapper",
   "version": "1.0.0",
+  "license": "MIT",
   "scripts": {
     "build": "babel src -d lib"
   },
