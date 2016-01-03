@@ -38,7 +38,7 @@ let constants = {
 };
 
 // takes an instance of Buffer or Uint8Array
-function sysexDecode(sysex) {
+function decodeFullPatch(sysex) {
   sysex = new Uint8Array(sysex);
 
   let patch = {
@@ -105,7 +105,7 @@ function sysexDecode(sysex) {
   return patch;
 }
 
-function sysexEncode(patch) {
+function encodeFullPatch(patch) {
   let sysex = new Uint8Array(24);
 
   sysex[0] = 0xF0; // start sysex
@@ -217,8 +217,8 @@ function encodeParamChange(paramPath, value, channel = 0) {
 }
 
 export default {
-  sysexDecode,
-  sysexEncode,
+  decodeFullPatch,
+  encodeFullPatch,
   encodeParamChange,
   paramChangeSupportedFor
 };

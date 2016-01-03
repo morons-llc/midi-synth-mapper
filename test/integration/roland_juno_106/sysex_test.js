@@ -63,14 +63,14 @@ describe('RolandJuno106', function () {
               amp: { level: 105, modType: 'env' },
               chorus: { disabled: false, level: 2 } };
 
-        let result = RolandJuno106.sysexDecode(sysex);
+        let result = RolandJuno106.decodeFullPatch(sysex);
         expect(result).to.eql(expected);
       });
 
       it('returns a representation of patch state, input 2', function () {
         let sysex = new Uint8Array(this.sysexTwoBuffer);
         let expected = this.sysexTwoData;
-        let result = RolandJuno106.sysexDecode(sysex);
+        let result = RolandJuno106.decodeFullPatch(sysex);
 
         expect(result).to.eql(expected);
       });
@@ -80,7 +80,7 @@ describe('RolandJuno106', function () {
       it('encodes the patch state into sysex', function () {
         let expected = new Uint8Array(this.sysexTwoBuffer);
         let input = this.sysexTwoData;
-        let result = RolandJuno106.sysexEncode(input);
+        let result = RolandJuno106.encodeFullPatch(input);
 
         expect(result).to.eql(expected);
       });
@@ -89,8 +89,8 @@ describe('RolandJuno106', function () {
     describe('sysex encoding and decoding', function () {
       it('does not change the encoded message', function () {
         let expected = new Uint8Array(this.sysexTwoBuffer);
-        let decoded = RolandJuno106.sysexDecode(expected);
-        let result = RolandJuno106.sysexEncode(decoded);
+        let decoded = RolandJuno106.decodeFullPatch(expected);
+        let result = RolandJuno106.encodeFullPatch(decoded);
 
         expect(result).to.eql(expected);
       });
