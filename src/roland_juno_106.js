@@ -136,15 +136,15 @@ function encodeFullPatch(patch) {
   // ****************** byte 21
 
   switch (patch.osc.osc1.waveLength) {
-  case '4':
-    sysex[21] = constants.WAVE_LENGTH_4;
-    break;
-  case '8':
-    sysex[21] = constants.WAVE_LENGTH_8;
-    break;
-  case '16':
-    sysex[21] = constants.WAVE_LENGTH_16;
-    break;
+    case '4':
+      sysex[21] = constants.WAVE_LENGTH_4;
+      break;
+    case '8':
+      sysex[21] = constants.WAVE_LENGTH_8;
+      break;
+    case '16':
+      sysex[21] = constants.WAVE_LENGTH_16;
+      break;
   }
 
   if (patch.osc.osc1.pulseWave) {
