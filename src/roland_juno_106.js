@@ -1,3 +1,5 @@
+import MIDIConstants from './constants';
+
 let constants = {
   WAVE_LENGTH_16: 1 << 0,
   WAVE_LENGTH_8: 1 << 1,
@@ -108,9 +110,9 @@ function decodeFullPatch(sysex) {
 function encodeFullPatch(patch) {
   let sysex = new Uint8Array(24);
 
-  sysex[0] = 0xF0; // start sysex
-  sysex[23] = 0xF7; // end sysex
-  sysex[1] = 0x41; // Roland ID
+  sysex[0] = MIDIConstants.messages.StartSysex;
+  sysex[23] = MIDIConstants.messages.EndSysex;
+  sysex[1] = MIDIConstants.manufacturers.roland;
   sysex[2] = 0x30; // message type
   sysex[4] = 37; // haha whynot
 
@@ -204,14 +206,14 @@ function encodeParamChange(paramPath, value, channel = 0) {
 
   let sysex = new Uint8Array(7);
 
-  sysex[0] = 0xF0;
-  sysex[1] = 0x41; // Roland ID
+  sysex[0] = MIDIConstants.messages.StartSysex;
+  sysex[1] = MIDIConstants.manufacturers.roland;
   sysex[2] = 0x32; // message type
   sysex[3] = channel; // MIDI channel
   sysex[4] = paramCode;
   sysex[5] = value;
 
-  sysex[6] = 0xF7;
+  sysex[6] = MIDIConstants.messages.EndSysex;
 
   return sysex;
 }
