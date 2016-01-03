@@ -66,6 +66,9 @@ export default {
 
     patch.osc.osc1.pwmType =
       Boolean(sysex[22] & constants.DCO_PWM_TYPE) ? 'manual' : 'lfo';
+
+    // TODO
+    // double check the VCA_MOD_TYPE with the hardware
     patch.amp.modType =
       Boolean(sysex[22] & constants.VCA_MOD_TYPE) ? 'gate' : 'env';
     patch.filter.polarity =
