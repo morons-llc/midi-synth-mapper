@@ -4,7 +4,7 @@ let constants = {
   WAVE_LENGTH_4: 1 << 2,
   PULSE_WAVEFORM_SET: 1 << 3,
   TRIANGLE_WAVEFORM_SET: 1 << 4,
-  CHORUS_ON: 1 << 5,
+  CHORUS_OFF: 1 << 5,
   CHORUS_LEVEL: 1 << 6,
   DCO_PWM_TYPE: 1 << 0,
   VCA_MOD_TYPE: 1 << 1,
@@ -63,7 +63,7 @@ function sysexDecode(sysex) {
     Boolean(sysex[21] & constants.PULSE_WAVEFORM_SET);
   patch.osc.osc1.triangleWave =
     Boolean(sysex[21] & constants.TRIANGLE_WAVEFORM_SET);
-  patch.chorus.enabled = !Boolean(sysex[21] & constants.CHORUS_ON);
+  patch.chorus.disabled = Boolean(sysex[21] & constants.CHORUS_OFF);
   patch.chorus.level = Boolean(sysex[21] & constants.CHORUS_LEVEL) ? 1 : 2;
 
   patch.osc.osc1.pwmType =
@@ -105,6 +105,8 @@ function sysexEncode(patch) {
   sysex[19] = patch.envelope.release;
   sysex[20] = patch.osc.osc1.subOsc;
 
+  // ****************** byte 21
+
   switch (patch.osc.osc1.waveLength) {
     case '4':
       sysex[21] = constants.WAVE_LENGTH_4;
@@ -117,8 +119,6 @@ function sysexEncode(patch) {
       break;
   }
 
-  // ****************** byte 21
-
   if (patch.osc.osc1.pulseWave) {
     sysex[21] = sysex[21] | constants.PULSE_WAVEFORM_SET;
   }
@@ -127,8 +127,8 @@ function sysexEncode(patch) {
    sysex[21] = sysex[21] | constants.TRIANGLE_WAVEFORM_SET;
   }
 
-  if (!patch.chorus.enabled) {
-    sysex[21] = sysex[21] | constants.CHORUS_ON;
+  if (patch.chorus.disabled) {
+    sysex[21] = sysex[21] | constants.CHORUS_OFF;
   }
 
   if (patch.chorus.level === 1) {
@@ -141,8 +141,6 @@ function sysexEncode(patch) {
     sysex[22] = sysex[22] | constants.DCO_PWM_TYPE;
   }
 
-  // TODO
-  // double check the VCA_MOD_TYPE with the hardware
   if (patch.amp.modType === 'gate') {
     sysex[22] = sysex[22] | constants.VCA_MOD_TYPE;
   }
