@@ -1,5 +1,4 @@
 {
-  "presets": ["es2015"]
-  // "sourceMaps": "inline",
-  // "ignore": ["node_modules"]
+  "presets": ["es2015"],
+  "ignore": ["node_modules"]
 }
