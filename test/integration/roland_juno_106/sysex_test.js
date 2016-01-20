@@ -33,7 +33,7 @@ describe('RolandJuno106', function () {
             hpf: 2 },
           envelope: { attack: 127, decay: 0, sustain: 0, release: 127 },
           amp: { level: 127, modType: 'gate' },
-          chorus: { disabled: false, level: 1 } };
+          chorus: { disabled: false, level: "II" } };
     });
 
     describe('full patch sysex decoding', function () {
@@ -61,7 +61,7 @@ describe('RolandJuno106', function () {
                 hpf: 0 },
               envelope: { attack: 0, decay: 60, sustain: 0, release: 127 },
               amp: { level: 105, modType: 'env' },
-              chorus: { disabled: false, level: 2 } };
+              chorus: { disabled: false, level: "I" } };
 
         let result = RolandJuno106.decodeFullPatch(sysex);
         expect(result).to.eql(expected);
