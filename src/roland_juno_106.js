@@ -92,7 +92,7 @@ function decodeFullPatch(sysex) {
   patch.osc.osc1.triangleWave =
     Boolean(sysex[21] & constants.TRIANGLE_WAVEFORM_SET);
   patch.chorus.disabled = Boolean(sysex[21] & constants.CHORUS_OFF);
-  patch.chorus.level = Boolean(sysex[21] & constants.CHORUS_LEVEL) ? 1 : 2;
+  patch.chorus.level = Boolean(sysex[21] & constants.CHORUS_LEVEL) ? "II" : "I";
 
   patch.osc.osc1.pwmType =
     Boolean(sysex[22] & constants.DCO_PWM_TYPE) ? 'manual' : 'lfo';
@@ -159,7 +159,7 @@ function encodeFullPatch(patch) {
     sysex[21] = sysex[21] | constants.CHORUS_OFF;
   }
 
-  if (patch.chorus.level === 1) {
+  if (patch.chorus.level === "II") {
     sysex[21] = sysex[21] | constants.CHORUS_LEVEL;
   }
 
